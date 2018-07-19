@@ -1,0 +1,33 @@
+.wrapper {
+	padding-bottom: 8px;
+	margin-left: auto;
+	margin-right: auto;
+	box-sizing: border-box;
+	width: 480px;
+	background-color: gray;
+}
+.input {
+	margin: 8px 8px 0 8px;
+	padding: 7px;
+	box-sizing: border-box;
+	width: 464px;
+	font-family: Arial;
+	font-size: 20px;
+	line-height: 24px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: black;
+}
+.task {
+	margin: 8px 8px 0 8px;
+	padding: 7px;
+	box-sizing: border-box;
+	max-width: 100%;
+	font-family: Arial;
+	font-size: 20px;
+	line-height: 24px;
+	background-color: white;
+	border-width: 1px;
+	border-style: solid;
+	border-color: black;
+}
