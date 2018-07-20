@@ -34,10 +34,12 @@ function TodoModel() {
 		}
 	}
 
-	this.addTask = function(task) {
-		tasks.push(task);
+	this.addTask = function(title) {
+	  const index = (new Date()).getTime();
+		tasks[index] = title;
 		const data = {
-			task: task
+			index: index,
+			title: title
 		}
 		notify('addTask', data);
 	}
@@ -60,14 +62,34 @@ function TodoModel() {
 function TodoView(model) {
 	model.attach('addTask', renderNewTask);
 
-	function renderNewTask(data) {
-		const taskList = document.getElementById('task-list');
+	function renderNewTask(data) {		
+		const taskTitle = document.createElement('div');
+		taskTitle.textContent = data['title'];
+		taskTitle.classList.add('task-title');
+		
+		const buttonDelete = document.createElement('button');
+		buttonDelete.classList.add('button-delete');
+		
 		const task = document.createElement('div');
-		task.textContent = data['task'];
+		task.id = 'id-' + data['index'];
 		task.classList.add('task');
+		task.appendChild(taskTitle);
+		task.appendChild(buttonDelete);
+
+		const taskList = document.getElementById('task-list');
 		taskList.appendChild(task);
+		
 		let input = document.getElementById('input');
 		input.value = '';
+	}
+
+	model.attach('removeTask', deleteTask);
+
+	function deleteTask(data) {
+		const id = "id-" + data['index'];
+		const taskList = document.getElementById('task-list');
+		const task = document.getElementById(id);
+		taskList.removeChild(task);
 	}
 }
 
@@ -79,5 +101,14 @@ function TodoController(model) {
 			const text = input.value;
 			model.addTask(text);
 		}
-	})
+	});
+	const taskList = document.getElementById('task-list');
+	taskList.addEventListener('click', function(evt) {
+		if (!evt.target.classList.contains('button-delete')) {
+			return;
+		}
+		const id = evt.target.parentElement.id;
+		const index = parseInt(id.replace('id-', ''), 10);
+		model.removeTask(index);
+	});
 }
