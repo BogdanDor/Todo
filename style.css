@@ -18,6 +18,9 @@
 	border-style: solid;
 	border-color: black;
 }
+.toggle {
+
+}
 .task {
 	margin: 8px 8px 0 8px;
 	padding: 7px;
@@ -34,6 +37,10 @@
 }
 .task-title {
 	flex-grow: 1;
+}
+.task-completed {
+	color: gray;
+	text-decoration: line-through;
 }
 .button-delete {
 	flex-basis: 20px;

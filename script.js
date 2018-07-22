@@ -19,7 +19,8 @@ document.onreadystatechange = function() {
 function TodoModel() {
 	const handlers = {
 		'addTask': [],
-		'removeTask': []
+		'removeTask': [],
+		'changeTask': []
 	}
 	const tasks = [];
 
@@ -36,7 +37,10 @@ function TodoModel() {
 
 	this.addTask = function(title) {
 	  const index = (new Date()).getTime();
-		tasks[index] = title;
+		tasks[index] = {
+			title: title,
+			isCompleted: false
+		}
 		const data = {
 			index: index,
 			title: title
@@ -52,6 +56,17 @@ function TodoModel() {
 		notify('removeTask', data);
 	}
 
+	this.setTaskCompleted = function(index, value) {
+		const task = tasks[index];
+		task['isCompleted'] = value;
+		data = {
+			index: index,
+			title: task['title'],
+			isCompleted: value
+		}
+		notify('changeTask', data);
+	}
+
 	function notify(type, data) {
 		handlers[type].forEach(function(el) {
 			el(data);
@@ -63,6 +78,10 @@ function TodoView(model) {
 	model.attach('addTask', renderNewTask);
 
 	function renderNewTask(data) {		
+		const toggle = document.createElement('input');
+		toggle.type = 'checkbox';
+		toggle.classList.add('toggle');
+
 		const taskTitle = document.createElement('div');
 		taskTitle.textContent = data['title'];
 		taskTitle.classList.add('task-title');
@@ -73,6 +92,7 @@ function TodoView(model) {
 		const task = document.createElement('div');
 		task.id = 'id-' + data['index'];
 		task.classList.add('task');
+		task.appendChild(toggle);
 		task.appendChild(taskTitle);
 		task.appendChild(buttonDelete);
 
@@ -90,6 +110,19 @@ function TodoView(model) {
 		const taskList = document.getElementById('task-list');
 		const task = document.getElementById(id);
 		taskList.removeChild(task);
+	}
+
+	model.attach('changeTask', changeTask);
+	
+	function changeTask(data) {
+		const id = "id-" + data['index'];
+		const task = document.getElementById(id);
+		const taskTitle = task.getElementsByClassName('task-title')[0];
+		if (data['isCompleted']) {
+			taskTitle.classList.add('task-completed');
+		} else {
+			taskTitle.classList.remove('task-completed');
+		}		
 	}
 }
 
@@ -110,5 +143,14 @@ function TodoController(model) {
 		const id = evt.target.parentElement.id;
 		const index = parseInt(id.replace('id-', ''), 10);
 		model.removeTask(index);
+	});
+	taskList.addEventListener('change', function(evt) {
+ 		if (!evt.target.classList.contains('toggle')) {
+ 			return
+ 		}
+		const id = evt.target.parentElement.id;
+		const index = parseInt(id.replace('id-', ''), 10);
+		const isCompleted = evt.target.checked;
+		model.setTaskCompleted(index, isCompleted);
 	});
 }
