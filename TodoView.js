@@ -2,20 +2,20 @@
 	function TodoView(model) {
 		model.attach('addTask', renderNewTask);
 
-		function renderNewTask(data) {		
+		function renderNewTask(data) {	
 			const toggle = document.createElement('input');
 			toggle.type = 'checkbox';
 			toggle.classList.add('toggle');
 
 			const taskTitle = document.createElement('div');
-			taskTitle.textContent = data['title'];
+			taskTitle.textContent = data['task']['title'];
 			taskTitle.classList.add('task-title');
 			
 			const buttonDelete = document.createElement('button');
 			buttonDelete.classList.add('button-delete');
 			
 			const task = document.createElement('div');
-			task.id = 'id-' + data['index'];
+			task.id = 'id-' + data['task']['index'];
 			task.classList.add('task');
 			task.appendChild(toggle);
 			task.appendChild(taskTitle);
@@ -26,6 +26,8 @@
 			
 			let input = document.getElementById('input');
 			input.value = '';
+
+			data.attach(changeTask);
 		}
 
 		model.attach('removeTask', deleteTask);
@@ -36,8 +38,6 @@
 			const task = document.getElementById(id);
 			taskList.removeChild(task);
 		}
-
-		model.attach('changeTask', changeTask);
 		
 		function changeTask(data) {
 			const id = "id-" + data['index'];

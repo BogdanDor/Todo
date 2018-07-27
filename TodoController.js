@@ -24,7 +24,8 @@
 			const id = evt.target.parentElement.id;
 			const index = parseInt(id.replace('id-', ''), 10);
 			const isCompleted = evt.target.checked;
-			model.setTaskCompleted(index, isCompleted);
+			const taskModel = model.getTaskModel(index);
+			taskModel.setCompleted(isCompleted);
 		});
 	}
 

@@ -2,10 +2,9 @@
 	function TodoModel() {
 		const handlers = {
 			'addTask': [],
-			'removeTask': [],
-			'changeTask': []
-		}
-		const tasks = [];
+			'removeTask': []
+		};
+		const taskModelCollection = [];
 
 	  this.attach = function(type, fn) {
 			handlers[type].push(fn);
@@ -20,34 +19,21 @@
 
 		this.addTask = function(title) {
 		  const index = (new Date()).getTime();
-			tasks[index] = {
-				title: title,
-				isCompleted: false
-			}
-			const data = {
-				index: index,
-				title: title
-			}
-			notify('addTask', data);
+		  const taskModel = new TaskModel(index, title);
+			taskModelCollection[index] = taskModel;
+			notify('addTask', taskModel);
+		}
+
+		this.getTaskModel = function(index) {
+			return taskModelCollection[index];
 		}
 
 		this.removeTask = function(index) {
-			tasks.splice(index, 1);
+			taskModelCollection.splice(index, 1);
 			const data = {
 				index: index
 			}
 			notify('removeTask', data);
-		}
-
-		this.setTaskCompleted = function(index, value) {
-			const task = tasks[index];
-			task['isCompleted'] = value;
-			data = {
-				index: index,
-				title: task['title'],
-				isCompleted: value
-			}
-			notify('changeTask', data);
 		}
 
 		function notify(type, data) {
@@ -59,4 +45,5 @@
 
 	win.app = win.app || {};
 	win.app.TodoModel = TodoModel;
+	const TaskModel = win.app.TaskModel;
 })(window);
