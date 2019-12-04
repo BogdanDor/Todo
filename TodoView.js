@@ -1,6 +1,6 @@
 ;(function(win) {
 	function TodoView(model) {
-		model.attach('addTask', renderNew);
+		model.attach('addTask', renderNewTask);
 
 		function renderNewTask(data) {
 			const task = new TaskView(data);
